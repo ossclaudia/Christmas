@@ -17,7 +17,7 @@
    - detalhe:   (bilhete/vale/jogo) o texto do bilhete ou vale
    - imagem:    (opcional) foto, ex: "img/jogo.jpg"
    - link:      (opcional) ex: link do jogo
-   - emoji:     a bola que fica pendurada na árvore
+   - emoji:     o emoji da prenda (aparece quando ela é revelada)
    ========================================================= */
 
 const CONFIG = {
@@ -28,6 +28,36 @@ const CONFIG = {
 };
 
 const ONDE = "Onde escondeste esta prenda? (preencher)";
+
+/* Familiar de cada dia (pela ordem dos dias 1 a 24).
+   Aparece na raspadinha e fica na porta quando o dia está feito.
+   Quanto mais antepassado, mais morto 💀 */
+const FAMILIA = [
+  ["a tua prima", "👧"],                   // 1
+  ["o teu primo", "👦"],                   // 2
+  ["a tua mãe", "👩"],                     // 3
+  ["o teu pai", "👨"],                     // 4
+  ["o teu avô", "👴"],                     // 5
+  ["a tua avó", "👵"],                     // 6
+  ["a tua madrinha", "👩‍🦰"],             // 7
+  ["a tua tia", "👱‍♀️"],                 // 8
+  ["o teu tio", "🧔"],                     // 9
+  ["o teu padrinho", "👨‍🦳"],             // 10
+  ["a tua bisavó", "🧟‍♀️"],              // 11 já cheira um bocadinho
+  ["a tua trisavó", "👻"],                 // 12 já só assombra
+  ["a tua tetravó", "💀"],                 // 13 só osso
+  ["a tua pentavó", "⚱️"],                 // 14 já é pó
+  ["o teu primo em segundo grau", "🧑‍🦱"], // 15
+  ["a tua prima em segundo grau", "👩‍🦱"], // 16
+  ["a tua afilhada", "🧚‍♀️"],            // 17
+  ["o teu sobrinho", "🧒"],                // 18
+  ["a tua irmã", "💁‍♀️"],                // 19
+  ["a tua cunhada", "🙋‍♀️"],             // 20
+  ["a tua nora", "👰‍♀️"],                // 21
+  ["o teu sogro", "🧓"],                   // 22
+  ["o teu genro", "🤵"],                   // 23
+  ["a tua filha", "👶"],                   // 24
+];
 
 const PRENDAS = [
   { dia: 1, titulo: "Tablete de Chocolate Milka (Árvore de Natal)", tipo: "fisica",

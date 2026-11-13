@@ -11,6 +11,8 @@
   const guardar = () => { try { localStorage.setItem(CHAVE, JSON.stringify(estado)); } catch (e) {} };
 
   const prenda = (d) => PRENDAS.find((p) => p.dia === d);
+  const familiar = (d) => FAMILIA[d - 1] || ["", "🎁"];
+  const maiuscula = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   const $ = (s, el = document) => el.querySelector(s);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
@@ -69,7 +71,7 @@
       if (estado.feito[d]) b.classList.add("aberta");
       b.setAttribute("aria-label", `Dia ${d}${livre ? "" : " (fechado)"}`);
       b.innerHTML = `
-        <span class="dentro">${estado.feito[d] ? esc(p.emoji) : ""}</span>
+        <span class="dentro">${estado.feito[d] ? esc(familiar(d)[1]) : ""}</span>
         <span class="folha"><span class="num">${d}</span>${livre ? "" : '<span class="cad">🔒</span>'}</span>`;
       b.onclick = () => clicaPorta(d, b);
       cal.appendChild(b);
@@ -120,7 +122,7 @@
     conteudo.innerHTML = `
       <h3>Raspa para abrir</h3>
       <p class="instr">Usa o dedo (ou o rato) para raspar o dourado.</p>
-      <div class="raspa"><span class="por-baixo">${esc(p.emoji)}</span><span class="por-baixo-txt">Ganhaste uma prenda!</span><canvas></canvas></div>`;
+      <div class="raspa"><span class="por-baixo">${esc(familiar(p.dia)[1])}</span><span class="por-baixo-txt">${esc(maiuscula(familiar(p.dia)[0]))}</span><canvas></canvas></div>`;
     const cv = $(".raspa canvas", conteudo);
     const r = cv.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
