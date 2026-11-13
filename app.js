@@ -21,7 +21,6 @@
   const desbloqueado = (d) => MODO_TESTE || Date.now() >= abreEm(d);
 
   /* ---------- cabeçalho ---------- */
-  $("#nome").textContent = CONFIG.nomeDele;
   if (MODO_TESTE) {
     $("#modo-teste").hidden = false;
     $("#reset").onclick = () => { estado = { aberto: {}, feito: {} }; guardar(); location.reload(); };
@@ -81,48 +80,10 @@
     if (!desbloqueado(d)) {
       el.classList.remove("treme"); void el.offsetWidth; el.classList.add("treme");
       const dias = Math.ceil((abreEm(d) - Date.now()) / 86400000);
-      aviso(dias <= 1 ? `Quase! Abre à meia-noite 🤫` : `Paciência! Esta só abre a ${d} de dezembro (faltam ${dias} dias) 😉`);
+      aviso(`Calma aí oh campeão que esta só abre dia ${d} de dezembro (${dias === 1 ? "falta 1 dia" : `faltam ${dias} dias`})`);
       return;
     }
     abreModal(d);
-  }
-
-  /* ---------- árvore ---------- */
-  const POS = (() => {
-    const filas = [2, 3, 4, 4, 5, 6];
-    const out = [];
-    filas.forEach((n, f) => {
-      const y = 22 + f * 12.5;            // % da altura
-      const meia = 8 + f * 6.6;           // meia-largura em %
-      for (let i = 0; i < n; i++) {
-        const x = 50 - meia + (2 * meia * (i + 0.5)) / n + (f % 2 ? 2 : -2);
-        out.push([x, y + (i % 2 ? 2.5 : 0)]);
-      }
-    });
-    return out;
-  })();
-
-  function desenhaArvore(novo) {
-    const c = $("#bolas");
-    c.innerHTML = "";
-    let n = 0;
-    PRENDAS.forEach((p, i) => {
-      const [x, y] = POS[i];
-      const s = document.createElement("span");
-      s.style.left = x + "%";
-      s.style.top = y + "%";
-      if (estado.feito[p.dia]) {
-        n++;
-        s.className = "bola" + (p.dia === novo ? " nova" : "");
-        s.textContent = p.emoji;
-        s.title = `Dia ${p.dia}`;
-      } else s.className = "bola vazia";
-      c.appendChild(s);
-    });
-    $("#estrela").classList.toggle("acesa", n >= 24);
-    $("#arvore-sub").textContent = n === 0
-      ? "Cada prenda descoberta pendura uma bola na árvore."
-      : n >= 24 ? "A árvore está completa. A estrela é tua ⭐" : `${n} de 24 bolas penduradas. A estrela acende quando estiver completa.`;
   }
 
   /* ---------- modal ---------- */
@@ -310,7 +271,7 @@
       <p style="margin-top:18px"><button class="btn sec" type="button" data-fechar>Fechar</button></p>`;
     if (!estado.feito[d]) {
       estado.feito[d] = true; estado.aberto[d] = true; guardar();
-      desenhaCalendario(); desenhaArvore(d);
+      desenhaCalendario();
     }
     if (celebrar) confetis(d === 24 ? 260 : 140);
   }
@@ -359,7 +320,6 @@
 
   /* ---------- arranque ---------- */
   desenhaCalendario();
-  desenhaArvore();
   atualizaContagem();
   setInterval(() => {
     atualizaContagem();

@@ -22,7 +22,6 @@
 
 const CONFIG = {
   ano: 2026,
-  nomeDele: "Amor",
   assinatura: "Com amor, a tua namorada",
   // Para testares tudo antes de dezembro: abre o site com ?teste=renas-voadoras-2026
   codigoTeste: "renas-voadoras-2026",

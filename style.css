@@ -65,21 +65,6 @@ main{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:16px 16px
 @keyframes treme{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
 .porta:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
 
-/* árvore */
-.arvore-sec{text-align:center;margin-top:56px}
-.arvore-sec h2{font-size:1.9rem;margin:0}
-.sub{color:var(--texto-2);margin:.4em 0 1em}
-.arvore{position:relative;width:min(320px,85vw);margin:0 auto}
-.arvore svg{display:block;width:100%;height:auto}
-.t1{fill:var(--pinho)} .t2{fill:#246b52} .t3{fill:var(--pinho-2)} .tronco{fill:#6b4329}
-.estrela{position:absolute;left:50%;top:0;transform:translate(-50%,-45%);font-size:2.6rem;color:#5d6b5f;transition:color .8s,text-shadow .8s}
-.estrela.acesa{color:var(--ouro);text-shadow:0 0 18px rgba(255,214,120,.9);animation:pulsa 2s ease-in-out infinite}
-@keyframes pulsa{50%{transform:translate(-50%,-45%) scale(1.12)}}
-.bola{position:absolute;transform:translate(-50%,-50%);font-size:clamp(1rem,4.5vw,1.35rem);line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
-.bola.vazia{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.12)}
-.bola.nova{animation:pendura .9s cubic-bezier(.3,1.6,.5,1)}
-@keyframes pendura{from{transform:translate(-50%,-260%) scale(.3);opacity:0}}
-
 /* modal */
 .modal{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:16px}
 .modal[hidden]{display:none}
@@ -180,7 +165,7 @@ main{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:16px 16px
 .placeholder-jogo{border:2px dashed var(--papel-2);border-radius:12px;padding:22px;color:var(--tinta-2);margin:8px 0}
 
 .aviso{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);opacity:0;z-index:20;background:var(--papel);color:var(--tinta);
-  padding:12px 18px;border-radius:999px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:all .3s;max-width:calc(100vw - 32px);text-align:center}
+  padding:14px 20px;border-radius:16px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:all .3s;width:max-content;max-width:min(380px,calc(100vw - 32px));text-align:center;line-height:1.4}
 .aviso.ver{opacity:1;transform:translate(-50%,0)}
 #confetis{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:30}
 
