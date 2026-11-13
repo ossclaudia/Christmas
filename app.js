@@ -112,10 +112,8 @@
 
   /* ---------- mini-jogos ---------- */
   function miniJogo(d) {
-    const p = prenda(d);
-    const tipo = /raspadinha/i.test(p.titulo) ? "raspa" : ["caixa", "raspa", "memoria"][d % 3];
     const fim = () => { estado.aberto[d] = true; guardar(); confetis(60); setTimeout(() => mostraConteudo(d), 500); };
-    ({ raspa: jogoRaspa, caixa: jogoCaixa, memoria: jogoMemoria })[tipo](fim, p);
+    jogoRaspa(fim, prenda(d));
   }
 
   function jogoRaspa(fim, p) {
@@ -155,66 +153,6 @@
     cv.addEventListener("pointerdown", (e) => { aRaspar = true; ultimo = null; cv.setPointerCapture(e.pointerId); raspa(e); });
     cv.addEventListener("pointermove", raspa);
     cv.addEventListener("pointerup", () => { aRaspar = false; ultimo = null; });
-  }
-
-  function jogoCaixa(fim, p) {
-    const N = 7;
-    conteudo.innerHTML = `
-      <h3>Desembrulha!</h3>
-      <p class="instr">Toca na caixa até o laço rebentar.</p>
-      <button class="caixa-jogo" type="button" aria-label="Caixa de presente">
-        <span class="luz"></span><span class="corpo"></span>
-        <span class="tampa"><span class="laco">🎀</span></span>
-      </button>
-      <div class="toques">${"<i></i>".repeat(N)}</div>`;
-    const cx = $(".caixa-jogo", conteudo), tampa = $(".tampa", cx), bolas = conteudo.querySelectorAll(".toques i");
-    let n = 0;
-    cx.onclick = () => {
-      if (n >= N) return;
-      n++;
-      bolas[n - 1].classList.add("on");
-      cx.classList.remove("abana"); void cx.offsetWidth; cx.classList.add("abana");
-      tampa.style.transform = `translateY(${-n * 3}px) rotate(${(n % 2 ? -1 : 1) * n * 1.5}deg)`;
-      if (navigator.vibrate) navigator.vibrate(15);
-      if (n === N) { setTimeout(() => cx.classList.add("voa"), 150); setTimeout(fim, 700); }
-    };
-  }
-
-  function jogoMemoria(fim) {
-    const pool = ["🎄", "⛄", "🎅", "🦌", "🍪", "🔔", "🧦", "⭐"];
-    const tres = pool.sort(() => Math.random() - 0.5).slice(0, 3);
-    const cartas = [...tres, ...tres].sort(() => Math.random() - 0.5);
-    conteudo.innerHTML = `
-      <h3>Encontra os pares</h3>
-      <p class="instr">Há 6 cartas viradas para baixo, com 3 pares de desenhos iguais.
-        Toca numa carta para a virar e depois noutra. Se forem iguais, ficam viradas.
-        Se não forem, voltam a esconder-se. Tenta memorizar onde estão!</p>
-      <div class="memoria">${cartas.map((e, i) => `
-        <button class="carta" type="button" data-i="${i}" aria-label="Carta ${i + 1}">✦</button>`).join("")}</div>
-      <p class="pares-conta">Pares encontrados: <b>0</b> / 3</p>`;
-    let viradas = [], pares = 0, ocupado = false;
-    const conta = $(".pares-conta b", conteudo);
-    const esconde = (c) => { c.classList.remove("virada"); c.textContent = "✦"; };
-    conteudo.querySelectorAll(".carta").forEach((c) => {
-      c.addEventListener("click", () => {
-        if (ocupado || c.classList.contains("virada") || c.classList.contains("par")) return;
-        c.classList.add("virada");
-        c.textContent = cartas[c.dataset.i];
-        viradas.push(c);
-        if (viradas.length < 2) return;
-        const [a, b] = viradas;
-        viradas = [];
-        if (cartas[a.dataset.i] === cartas[b.dataset.i]) {
-          a.classList.replace("virada", "par"); b.classList.replace("virada", "par");
-          conta.textContent = ++pares;
-          if (navigator.vibrate) navigator.vibrate(30);
-          if (pares === 3) setTimeout(fim, 500);
-        } else {
-          ocupado = true;
-          setTimeout(() => { esconde(a); esconde(b); ocupado = false; }, 900);
-        }
-      });
-    });
   }
 
   /* ---------- conteúdo depois de abrir ---------- */
