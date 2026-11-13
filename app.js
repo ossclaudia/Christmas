@@ -223,28 +223,34 @@
     const cartas = [...tres, ...tres].sort(() => Math.random() - 0.5);
     conteudo.innerHTML = `
       <h3>Encontra os pares</h3>
-      <p class="instr">Junta os 3 pares para abrir a porta.</p>
+      <p class="instr">Há 6 cartas viradas para baixo, com 3 pares de desenhos iguais.
+        Toca numa carta para a virar e depois noutra. Se forem iguais, ficam viradas.
+        Se não forem, voltam a esconder-se. Tenta memorizar onde estão!</p>
       <div class="memoria">${cartas.map((e, i) => `
-        <button class="carta" type="button" data-i="${i}" aria-label="Carta ${i + 1}">
-          <span class="in"><span class="f">✦</span><span class="v">${e}</span></span>
-        </button>`).join("")}</div>`;
+        <button class="carta" type="button" data-i="${i}" aria-label="Carta ${i + 1}">✦</button>`).join("")}</div>
+      <p class="pares-conta">Pares encontrados: <b>0</b> / 3</p>`;
     let viradas = [], pares = 0, ocupado = false;
+    const conta = $(".pares-conta b", conteudo);
+    const esconde = (c) => { c.classList.remove("virada"); c.textContent = "✦"; };
     conteudo.querySelectorAll(".carta").forEach((c) => {
-      c.onclick = () => {
+      c.addEventListener("click", () => {
         if (ocupado || c.classList.contains("virada") || c.classList.contains("par")) return;
         c.classList.add("virada");
+        c.textContent = cartas[c.dataset.i];
         viradas.push(c);
         if (viradas.length < 2) return;
         const [a, b] = viradas;
         viradas = [];
         if (cartas[a.dataset.i] === cartas[b.dataset.i]) {
-          a.classList.add("par"); b.classList.add("par");
-          if (++pares === 3) setTimeout(fim, 450);
+          a.classList.replace("virada", "par"); b.classList.replace("virada", "par");
+          conta.textContent = ++pares;
+          if (navigator.vibrate) navigator.vibrate(30);
+          if (pares === 3) setTimeout(fim, 500);
         } else {
           ocupado = true;
-          setTimeout(() => { a.classList.remove("virada"); b.classList.remove("virada"); ocupado = false; }, 750);
+          setTimeout(() => { esconde(a); esconde(b); ocupado = false; }, 900);
         }
-      };
+      });
     });
   }
 

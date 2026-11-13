@@ -132,14 +132,18 @@ main{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:16px 16px
 
 /* mini-jogo: memória */
 .memoria{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:300px;margin:0 auto}
-.carta{aspect-ratio:3/4;border:0;border-radius:10px;padding:0;background:none;perspective:500px}
-.carta .in{position:relative;width:100%;height:100%;transition:transform .4s;transform-style:preserve-3d}
-.carta.virada .in,.carta.par .in{transform:rotateY(180deg)}
-.carta .f,.carta .v{position:absolute;inset:0;border-radius:10px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden}
-.carta .f{background:var(--pinho);color:var(--ouro);font-size:1.4rem;
-  background-image:radial-gradient(circle at 50% 50%,rgba(255,255,255,.12) 2px,transparent 3px);background-size:14px 14px}
-.carta .v{background:#fff;transform:rotateY(180deg);font-size:2rem;box-shadow:inset 0 0 0 2px var(--papel-2)}
-.carta.par .v{box-shadow:inset 0 0 0 3px var(--ouro)}
+.carta{
+  display:flex;align-items:center;justify-content:center;height:96px;width:100%;
+  border:0;border-radius:12px;padding:0;font-size:2.2rem;line-height:1;
+  background:var(--pinho);color:var(--ouro);
+  background-image:radial-gradient(circle at 50% 50%,rgba(255,255,255,.14) 2px,transparent 3px);background-size:14px 14px;
+  box-shadow:0 4px 0 #154535;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.carta:active{transform:translateY(2px)}
+.carta.virada,.carta.par{background:#fff;background-image:none;box-shadow:inset 0 0 0 2px var(--papel-2),0 4px 0 var(--papel-2);animation:vira .3s ease-out}
+.carta.par{box-shadow:inset 0 0 0 3px var(--ouro),0 4px 0 var(--ouro-2)}
+@keyframes vira{from{transform:scaleX(0)}}
+.pares-conta{margin:14px 0 0;color:var(--tinta-2);font-weight:700}
 
 /* cartões de conteúdo */
 .cartao{background:#fff;border-radius:14px;padding:18px;margin:4px 0 16px;text-align:left;box-shadow:0 2px 0 var(--papel-2)}
