@@ -27,34 +27,34 @@ const SEMANA = {
   0: { frase: "It's fucking Fat Sunday",                                       cor: "#8f2f3a" },
 };
 
-/* Familiar de cada dia (dias 1 a 24, por ordem).
+/* Familiar de cada dia (dias 1 a 24, por ordem): [nome, emoji de reserva, boneco desenhado em bonecos.js].
    Aparece na raspadinha, na app e nas etiquetas dos embrulhos.
    Quanto mais antepassado, mais morto 💀 */
 const FAMILIA = [
-  ["a tua prima", "👧"],                   // 1
-  ["o teu primo", "👦"],                   // 2
-  ["a tua mãe", "👩"],                     // 3
-  ["o teu pai", "👨"],                     // 4
-  ["o teu avô", "👴"],                     // 5
-  ["a tua avó", "👵"],                     // 6
-  ["a tua madrinha", "👩‍🦰"],             // 7
-  ["a tua tia", "👱‍♀️"],                 // 8
-  ["o teu tio", "🧔"],                     // 9
-  ["o teu padrinho", "👨‍🦳"],             // 10
-  ["a tua bisavó", "🧟‍♀️"],              // 11 já cheira um bocadinho
-  ["a tua trisavó", "👻"],                 // 12 já só assombra
-  ["a tua tetravó", "💀"],                 // 13 só osso
-  ["a tua pentavó", "⚱️"],                 // 14 já é pó
-  ["o teu primo em segundo grau", "🧑‍🦱"], // 15
-  ["a tua prima em segundo grau", "👩‍🦱"], // 16
-  ["a tua afilhada", "🧚‍♀️"],            // 17
-  ["o teu sobrinho", "🧒"],                // 18
-  ["a tua irmã", "💁‍♀️"],                // 19
-  ["a tua cunhada", "🙋‍♀️"],             // 20
-  ["a tua nora", "👰‍♀️"],                // 21
-  ["o teu sogro", "🧓"],                   // 22
-  ["o teu genro", "🤵"],                   // 23
-  ["o teu bisavô", "🎅"],                  // 24 vestido de Pai Natal
+  ["a tua prima", "👧", "prima"],                   // 1
+  ["o teu primo", "👦", "primo"],                   // 2
+  ["a tua mãe", "👩", "mae"],                     // 3
+  ["o teu pai", "👨", "pai"],                     // 4
+  ["o teu avô", "👴", "avo"],                     // 5
+  ["a tua avó", "👵", "avoa"],                     // 6
+  ["a tua madrinha", "👩‍🦰", "madrinha"],             // 7
+  ["a tua tia", "👱‍♀️", "tia"],                 // 8
+  ["o teu tio", "🧔", "tio"],                     // 9
+  ["o teu padrinho", "👨‍🦳", "padrinho"],             // 10
+  ["a tua bisavó", "🧟‍♀️", "bisavo"],              // 11 já cheira um bocadinho
+  ["a tua trisavó", "👻", "trisavo"],                 // 12 já só assombra
+  ["a tua tetravó", "💀", "tetravo"],                 // 13 só osso
+  ["a tua pentavó", "⚱️", "pentavo"],                 // 14 já é pó
+  ["o teu primo em segundo grau", "🧑‍🦱", "primo2"], // 15
+  ["a tua prima em segundo grau", "👩‍🦱", "prima2"], // 16
+  ["a tua afilhada", "🧚‍♀️", "afilhada"],            // 17
+  ["o teu sobrinho", "🧒", "sobrinho"],                // 18
+  ["a tua irmã", "💁‍♀️", "irma"],                // 19
+  ["a tua cunhada", "🙋‍♀️", "cunhada"],             // 20
+  ["a tua nora", "👰‍♀️", "nora"],                // 21
+  ["o teu sogro", "🧓", "sogro"],                   // 22
+  ["o teu genro", "🤵", "genro"],                   // 23
+  ["o teu bisavô", "🎅", "bisavoNatal"],                  // 24 vestido de Pai Natal
 ];
 
 /* Prendas de cada dia.

@@ -12,6 +12,11 @@
 
   const prenda = (d) => PRENDAS.find((p) => p.dia === d);
   const familiar = (d) => FAMILIA[d - 1] || ["", "🎁"];
+  // boneco desenhado do familiar (ou o emoji, se o desenho não existir)
+  const fig = (d) => {
+    const [, emoji, k] = familiar(d);
+    return k && window.BONECOS && BONECOS[k] ? `<span class="fig">${BONECOS[k]}</span>` : esc(emoji);
+  };
   const maiuscula = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   const $ = (s, el = document) => el.querySelector(s);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -85,7 +90,7 @@
       if (estado.feito[d]) b.classList.add("aberta");
       b.setAttribute("aria-label", `Dia ${d}${livre ? "" : " (fechado)"}`);
       b.innerHTML = `
-        <span class="dentro">${estado.feito[d] ? esc(familiar(d)[1]) : ""}</span>
+        <span class="dentro">${estado.feito[d] ? fig(d) : ""}</span>
         <span class="folha"><span class="num">${d}</span>${livre ? "" : '<span class="cad">🔒</span>'}</span>`;
       b.onclick = () => clicaPorta(d, b);
       cal.appendChild(b);
@@ -137,7 +142,7 @@
     conteudo.innerHTML = `
       <h3>Raspa para abrir</h3>
       <p class="instr">Usa o dedo (ou o rato) para raspar o dourado.</p>
-      <div class="raspa"><span class="por-baixo">${esc(familiar(p.dia)[1])}</span><span class="por-baixo-txt">${esc(maiuscula(familiar(p.dia)[0]))}</span><canvas></canvas></div>`;
+      <div class="raspa"><span class="por-baixo">${fig(p.dia)}</span><span class="por-baixo-txt">${esc(maiuscula(familiar(p.dia)[0]))}</span><canvas></canvas></div>`;
     const cv = $(".raspa canvas", conteudo);
     const r = cv.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
@@ -184,7 +189,7 @@
       <div class="velas">${FAMILIA.map((f, i) => `
         <button class="vela" type="button" data-i="${i}" aria-label="Vela ${i + 1}">
           <span class="chama"></span><span class="pavio"></span><span class="cera"></span>
-          <span class="quem">${esc(f[1])}</span>
+          <span class="quem">${fig(i + 1)}</span>
         </button>`).join("")}</div>
       <p class="pares-conta"><b>0</b> / 24</p>`;
     const grade = $(".velas", conteudo), conta = $(".pares-conta b", conteudo);
@@ -227,7 +232,7 @@
       </div>` : "";
     conteudo.innerHTML = `
       ${d === 24 ? `<div class="velas-mini" aria-hidden="true">${"<i></i>".repeat(7)}</div>` : ""}
-      <div class="revelado-emoji">${esc(emoji)}</div>
+      <div class="revelado-emoji">${fig(d)}</div>
       <h3>${esc(maiuscula(quem))}</h3>
       <div class="semana" style="--cs:${sem.cor};--ct:${sem.texto || "#fff"}">
         <p class="frase" aria-label="${esc(sem.frase)}…"></p>
