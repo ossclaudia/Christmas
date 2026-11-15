@@ -13,10 +13,11 @@ const CONFIG = {
   codigoTeste: "renas-voadoras-2026",
 };
 
-/* A frase de cada dia da semana (0 = domingo, 1 = segunda, ... 6 = sábado) */
+/* A frase de cada dia da semana (0 = domingo, 1 = segunda, ... 6 = sábado).
+   cor = cor da porta e do cartão; texto (opcional) = cor das letras se a cor for clara */
 const SEMANA = {
   1: { frase: "It's fucking Shit from shein that made me think of you Monday", cor: "#d1477a" },
-  2: { frase: "It's fucking Style Tuesday",                                    cor: "#7a5cc7" },
+  2: { frase: "It's fucking Style Tuesday",                                    cor: "#e8bf2e", texto: "#2a1d17" },
   3: { frase: "It's fucking I didn't have money for more Wednesday",           cor: "#2f8f6b" },
   4: { frase: "It's fucking date Thursday",                                    cor: "#c3392c" },
   5: { frase: "It's fucking Personalized Friday",                              cor: "#2c6fa8" },

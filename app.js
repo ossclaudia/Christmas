@@ -65,6 +65,7 @@
       b.className = "porta";
       b.dataset.dia = d;
       b.style.setProperty("--c", diaSemana(d).cor);
+      if (diaSemana(d).texto) b.style.setProperty("--t", diaSemana(d).texto);
       const livre = desbloqueado(d);
       if (!livre) b.classList.add("bloqueada");
       if (d === hoje && !estado.feito[d]) b.classList.add("hoje");
@@ -172,7 +173,7 @@
     conteudo.innerHTML = `
       <div class="revelado-emoji">${esc(emoji)}</div>
       <h3>${esc(maiuscula(quem))}</h3>
-      <div class="semana" style="--cs:${sem.cor}">
+      <div class="semana" style="--cs:${sem.cor};--ct:${sem.texto || "#fff"}">
         <p class="frase" aria-label="${esc(sem.frase)}…"></p>
         ${p.tipo === "fisica" ? `<p class="abre aparece">open <b>${esc(quem)}</b> 🎁</p>` : ""}
       </div>

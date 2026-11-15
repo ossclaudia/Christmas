@@ -23,7 +23,7 @@ button{font:inherit;cursor:pointer}
 #neve i{position:absolute;top:-10px;border-radius:50%;background:#fff;opacity:.7;animation:cai linear infinite}
 @keyframes cai{to{transform:translate3d(var(--dx),105vh,0)}}
 
-.topo{position:relative;z-index:1;text-align:center;padding:40px 16px 8px}
+.topo{position:relative;z-index:1;text-align:center;padding:calc(40px + env(safe-area-inset-top)) 16px 8px}
 .sobre{margin:0;letter-spacing:.2em;text-transform:uppercase;font-size:.75rem;color:var(--ouro);font-weight:800}
 h1{margin:.2em 0 .1em;font-size:clamp(2rem,7vw,3.4rem);line-height:1.05;font-weight:700}
 h1 span{font-style:italic;color:var(--ouro)}
@@ -53,6 +53,7 @@ main{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:16px 16px
   box-shadow:0 6px 14px rgba(0,0,0,.35), inset 0 -4px 0 rgba(0,0,0,.18);
   backface-visibility:hidden;
 }
+.porta .folha{color:var(--t, var(--texto))}
 .porta .num{font-family:Fraunces,serif;font-weight:700;font-size:clamp(1.5rem,6vw,2.1rem);text-shadow:0 2px 0 rgba(0,0,0,.2)}
 .porta .cad{font-size:.8rem;opacity:.75}
 .porta .dentro{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(1.6rem,7vw,2.4rem)}
@@ -100,13 +101,13 @@ main{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:16px 16px
 /* depois de raspar */
 .revelado-emoji{font-size:3.6rem;line-height:1;margin:6px 0 2px;animation:salta .8s cubic-bezier(.3,1.8,.5,1)}
 @keyframes salta{from{transform:scale(0) rotate(-30deg)}}
-.semana{background:var(--cs);color:#fff;border-radius:16px;padding:18px 16px;margin:6px 0 14px;
+.semana{background:var(--cs);color:var(--ct);border-radius:16px;padding:18px 16px;margin:6px 0 14px;
   box-shadow:0 6px 0 rgba(0,0,0,.18);transform:rotate(-1.2deg)}
 .frase{margin:0;font-family:Fraunces,serif;font-weight:700;font-style:italic;font-size:1.35rem;line-height:1.25;min-height:1.25em}
 .frase.a-escrever::after{content:"|";font-style:normal;animation:pisca .7s steps(1) infinite}
 @keyframes pisca{50%{opacity:0}}
 .abre{margin:12px 0 0;font-size:1.15rem;font-weight:800;letter-spacing:.02em}
-.abre b{background:rgba(255,255,255,.22);padding:2px 8px;border-radius:999px}
+.abre b{background:rgba(255,255,255,.28);padding:2px 8px;border-radius:999px}
 .aparece{opacity:0;transform:translateY(10px) scale(.96);transition:opacity .45s,transform .45s cubic-bezier(.3,1.5,.5,1)}
 .aparece.ver{opacity:1;transform:none}
 
