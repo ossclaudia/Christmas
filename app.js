@@ -21,6 +21,7 @@
      "dia D às 00:01 em Lisboa" = Date.UTC(ano, 11, D, 0, 1). */
   const abreEm = (d) => Date.UTC(CONFIG.ano, 11, d, 0, 1);
   const desbloqueado = (d) => MODO_TESTE || Date.now() >= abreEm(d);
+  const diaSemana = (d) => SEMANA[new Date(Date.UTC(CONFIG.ano, 11, d)).getUTCDay()];
 
   /* ---------- cabeçalho ---------- */
   if (MODO_TESTE) {
@@ -45,8 +46,7 @@
   }
 
   /* ---------- calendário ---------- */
-  const ORDEM = [7, 15, 2, 21, 11, 18, 4, 24, 9, 13, 1, 19, 16, 6, 22, 3, 12, 20, 10, 14, 23, 5, 17, 8];
-  const CORES = ["#c3392c", "#1f6b50", "#b98a2c", "#8f2f3a", "#2c5f7c", "#a6452a"];
+  const ORDEM = [2, 12, 4, 13, 19, 16, 6, 7, 15, 21, 18, 8, 3, 22, 17, 20, 9, 5, 23, 10, 1, 24, 14, 11]; // portas da mesma cor nunca lado a lado
 
   function hojeLisboa() {
     const p = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Lisbon", year: "numeric", month: "numeric", day: "numeric" })
@@ -58,13 +58,13 @@
     const cal = $("#calendario");
     const hoje = hojeLisboa();
     cal.innerHTML = "";
-    ORDEM.forEach((d, i) => {
+    ORDEM.forEach((d) => {
       const p = prenda(d);
       const b = document.createElement("button");
       b.type = "button";
       b.className = "porta";
       b.dataset.dia = d;
-      b.style.setProperty("--c", CORES[i % CORES.length]);
+      b.style.setProperty("--c", diaSemana(d).cor);
       const livre = desbloqueado(d);
       if (!livre) b.classList.add("bloqueada");
       if (d === hoje && !estado.feito[d]) b.classList.add("hoje");
@@ -141,13 +141,14 @@
       ctx.lineWidth = 34; ctx.lineCap = "round";
       ctx.beginPath(); ctx.moveTo(...(ultimo || [x, y])); ctx.lineTo(x, y); ctx.stroke();
       ultimo = [x, y];
+      if (navigator.vibrate && contador % 3 === 0) navigator.vibrate(12); // vibra enquanto raspa (Android)
       if (++contador % 8 === 0) verifica();
     };
     const verifica = () => {
       const px = ctx.getImageData(0, 0, cv.width, cv.height).data;
       let t = 0, l = 0;
       for (let i = 3; i < px.length; i += 64) { t++; if (px[i] === 0) l++; }
-      if (l / t > 0.5) { feito = true; cv.style.transition = "opacity .5s"; cv.style.opacity = 0; fim(); }
+      if (l / t > 0.5) { feito = true; if (navigator.vibrate) navigator.vibrate([40, 60, 80]); cv.style.transition = "opacity .5s"; cv.style.opacity = 0; fim(); }
     };
     cv.addEventListener("pointerdown", (e) => { aRaspar = true; ultimo = null; cv.setPointerCapture(e.pointerId); raspa(e); });
     cv.addEventListener("pointermove", raspa);
@@ -155,8 +156,6 @@
   }
 
   /* ---------- depois de raspar ---------- */
-  const diaSemana = (d) => SEMANA[new Date(Date.UTC(CONFIG.ano, 11, d)).getUTCDay()];
-
   function mostraFinal(d, celebrar) {
     const p = prenda(d);
     const [quem, emoji] = familiar(d);
