@@ -6,7 +6,7 @@
   const MODO_TESTE = params.get("teste") === CONFIG.codigoTeste;
   const CHAVE = MODO_TESTE ? "advento-teste" : "advento-" + CONFIG.ano;
 
-  let estado = { aberto: {}, feito: {} };
+  let estado = { feito: {} };
   try { estado = Object.assign(estado, JSON.parse(localStorage.getItem(CHAVE)) || {}); } catch (e) {}
   const guardar = () => { try { localStorage.setItem(CHAVE, JSON.stringify(estado)); } catch (e) {} };
 
@@ -25,7 +25,7 @@
   /* ---------- cabeçalho ---------- */
   if (MODO_TESTE) {
     $("#modo-teste").hidden = false;
-    $("#reset").onclick = () => { estado = { aberto: {}, feito: {} }; guardar(); location.reload(); };
+    $("#reset").onclick = () => { estado = { feito: {} }; guardar(); location.reload(); };
   }
 
   function atualizaContagem() {
@@ -100,7 +100,6 @@
     modal.hidden = false;
     document.body.style.overflow = "hidden";
     if (estado.feito[d]) mostraFinal(d, false);
-    else if (estado.aberto[d]) mostraConteudo(d);
     else miniJogo(d);
   }
   function fechaModal() {
@@ -112,7 +111,7 @@
 
   /* ---------- mini-jogos ---------- */
   function miniJogo(d) {
-    const fim = () => { estado.aberto[d] = true; guardar(); confetis(60); setTimeout(() => mostraConteudo(d), 500); };
+    const fim = () => setTimeout(() => mostraFinal(d, true), 600);
     jogoRaspa(fim, prenda(d));
   }
 
@@ -155,65 +154,51 @@
     cv.addEventListener("pointerup", () => { aRaspar = false; ultimo = null; });
   }
 
-  /* ---------- conteúdo depois de abrir ---------- */
-  function mostraConteudo(d) {
-    const p = prenda(d);
-    if (p.tipo !== "fisica") return mostraFinal(d, true);
-    conteudo.innerHTML = `
-      <h3>Há uma prenda escondida…</h3>
-      <div class="cartao adivinha"><p class="rotulo">Adivinha</p><p>${esc(p.adivinha)}</p></div>
-      <div class="cartao"><p class="rotulo">Onde procurar</p><p>${esc(p.pista)}</p></div>
-      <p class="instr">Quando a encontrares, escreve a palavra secreta que está na etiqueta.</p>
-      <form class="codigo-form" autocomplete="off">
-        <input name="c" placeholder="Palavra secreta" aria-label="Palavra secreta" autocapitalize="characters" spellcheck="false">
-        <button class="btn" type="submit">Abrir</button>
-      </form>
-      <p class="msg-erro" aria-live="polite"></p>`;
-    const f = $(".codigo-form", conteudo);
-    f.onsubmit = (e) => {
-      e.preventDefault();
-      if (normal(f.c.value) === normal(p.codigo)) return mostraFinal(d, true);
-      f.classList.remove("erro"); void f.offsetWidth; f.classList.add("erro");
-      const frases = ["Hmm, não é bem isso. Lê bem a etiqueta!", "Quase… ou não 😅", "Ainda não encontraste, pois não? 👀"];
-      $(".msg-erro", conteudo).textContent = frases[Math.floor(Math.random() * frases.length)];
-    };
-  }
-  const normal = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  /* ---------- depois de raspar ---------- */
+  const diaSemana = (d) => SEMANA[new Date(Date.UTC(CONFIG.ano, 11, d)).getUTCDay()];
 
   function mostraFinal(d, celebrar) {
     const p = prenda(d);
-    const rotulos = { bilhete: "Bilhete", vale: "Vale", jogo: "Jogo" };
-    let topo;
-    if (p.tipo === "bilhete" || p.tipo === "vale") {
-      topo = `
-        <div class="bilhete ${p.tipo}">
-          <div class="principal">
-            <div class="tipo">${rotulos[p.tipo]} · ${d} dez</div>
-            <div class="titulo-prenda">${esc(p.titulo)}</div>
-            <div class="det">${esc(p.detalhe)}</div>
-          </div>
-          <div class="canhoto">Admitido</div>
+    const [quem, emoji] = familiar(d);
+    const sem = diaSemana(d);
+    const bilhete = p.tipo === "vale" || p.tipo === "bilhete" ? `
+      <div class="bilhete ${p.tipo} aparece">
+        <div class="principal">
+          <div class="tipo">${p.tipo === "vale" ? "Vale" : "Bilhete"} · ${d} dez</div>
+          <div class="titulo-prenda">${esc(p.titulo)}</div>
+          <div class="det">${esc(p.detalhe)}</div>
         </div>
-        ${p.imagem ? `<img class="img-prenda" src="${esc(p.imagem)}" alt="${esc(p.titulo)}">` : ""}`;
-    } else if (p.tipo === "jogo") {
-      topo = `
-        <div class="revelado-emoji">${esc(p.emoji)}</div>
-        <h3>${esc(p.titulo)}</h3>
-        ${p.imagem ? `<img class="img-prenda" src="${esc(p.imagem)}" alt="${esc(p.titulo)}">` : ""}
-        ${p.link ? `<p><a class="btn ouro" href="${esc(p.link)}" target="_blank" rel="noopener">Jogar agora</a></p>` : ""}
-        ${!p.imagem && !p.link ? `<div class="placeholder-jogo">${esc(p.detalhe)}</div>` : ""}`;
-    } else {
-      topo = `<div class="revelado-emoji">${esc(p.emoji)}</div><h3>${esc(p.titulo)}</h3>`;
-    }
+        <div class="canhoto">Admitido</div>
+      </div>` : "";
     conteudo.innerHTML = `
-      ${topo}
-      <div class="carta-amor"><p>${esc(p.mensagem)}</p><p class="ass">${esc(CONFIG.assinatura)}</p></div>
+      <div class="revelado-emoji">${esc(emoji)}</div>
+      <h3>${esc(maiuscula(quem))}</h3>
+      <div class="semana" style="--cs:${sem.cor}">
+        <p class="frase" aria-label="${esc(sem.frase)}…"></p>
+        ${p.tipo === "fisica" ? `<p class="abre aparece">open <b>${esc(quem)}</b> 🎁</p>` : ""}
+      </div>
+      ${bilhete}
+      ${p.imagem ? `<img class="img-prenda aparece" src="${esc(p.imagem)}" alt="">` : ""}
+      ${p.link ? `<p class="aparece"><a class="btn ouro" href="${esc(p.link)}" target="_blank" rel="noopener">Abrir link</a></p>` : ""}
       <p style="margin-top:18px"><button class="btn sec" type="button" data-fechar>Fechar</button></p>`;
+    escreve($(".frase", conteudo), sem.frase + "…", celebrar, () =>
+      conteudo.querySelectorAll(".aparece").forEach((el, i) => setTimeout(() => el.classList.add("ver"), i * 250)));
     if (!estado.feito[d]) {
-      estado.feito[d] = true; estado.aberto[d] = true; guardar();
+      estado.feito[d] = true; guardar();
       desenhaCalendario();
     }
     if (celebrar) confetis(d === 24 ? 260 : 140);
+  }
+
+  // efeito máquina de escrever (só na primeira vez; depois aparece logo)
+  function escreve(el, txt, animar, depois) {
+    if (!animar || matchMedia("(prefers-reduced-motion: reduce)").matches) { el.textContent = txt; return depois(); }
+    let i = 0;
+    el.classList.add("a-escrever");
+    const t = setInterval(() => {
+      el.textContent = txt.slice(0, ++i);
+      if (i >= txt.length) { clearInterval(t); el.classList.remove("a-escrever"); setTimeout(depois, 200); }
+    }, 38);
   }
 
   /* ---------- extras ---------- */
