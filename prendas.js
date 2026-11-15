@@ -11,6 +11,8 @@ const CONFIG = {
   ano: 2026,
   // Para testares tudo antes de dezembro: abre o site com ?teste=renas-voadoras-2026
   codigoTeste: "renas-voadoras-2026",
+  // Data e hora do concerto (para a contagem decrescente depois do dia 24). Em fevereiro Portugal está em UTC+0.
+  concerto: "2027-02-13T19:30:00Z",
 };
 
 /* A frase de cada dia da semana (0 = domingo, 1 = segunda, ... 6 = sábado).

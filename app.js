@@ -34,15 +34,28 @@
     const el = $("#contagem");
     if (!prox) {
       const feitos = Object.keys(estado.feito).length;
-      el.innerHTML = feitos >= 24 ? "Todas as portas abertas. Feliz Natal! 🎄" : "Todas as portas já se podem abrir 🎄";
+      if (estado.feito[24] && CONCERTO > Date.now()) el.innerHTML = `O Candlelight é daqui a <b>${falta(CONCERTO)}</b> 🕯️`;
+      else el.innerHTML = feitos >= 24 ? "Todas as portas abertas. Feliz Natal! 🎄" : "Todas as portas já se podem abrir 🎄";
       return;
     }
-    let s = Math.max(0, Math.floor((abreEm(prox) - Date.now()) / 1000));
+    el.innerHTML = `A porta <b>${prox}</b> abre daqui a <b>${falta(abreEm(prox))}</b>`;
+  }
+
+  function falta(alvo) {
+    let s = Math.max(0, Math.floor((alvo - Date.now()) / 1000));
     const d = Math.floor(s / 86400); s %= 86400;
     const h = Math.floor(s / 3600); s %= 3600;
     const m = Math.floor(s / 60); s %= 60;
     const pad = (n) => String(n).padStart(2, "0");
-    el.innerHTML = `A porta <b>${prox}</b> abre daqui a <b>${d ? d + "d " : ""}${pad(h)}:${pad(m)}:${pad(s)}</b>`;
+    return `${d ? d + "d " : ""}${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+
+  const CONCERTO = Date.parse(CONFIG.concerto);
+  function textoConcerto() {
+    const ms = CONCERTO - Date.now();
+    if (ms <= 0) return "";
+    const dias = Math.ceil(ms / 86400000);
+    return dias <= 1 ? "O Candlelight é hoje! 🕯️" : `Faltam ${dias} dias para o Candlelight 🕯️`;
   }
 
   /* ---------- calendário ---------- */
@@ -97,6 +110,8 @@
 
   function abreModal(d) {
     diaAtual = d;
+    $(".modal-caixa").classList.remove("noite");
+    $(".modal-caixa").style.removeProperty("--luz");
     $("#modal-dia").textContent = `${d} de dezembro`;
     modal.hidden = false;
     document.body.style.overflow = "hidden";
@@ -112,7 +127,9 @@
 
   /* ---------- mini-jogos ---------- */
   function miniJogo(d) {
-    const fim = () => setTimeout(() => mostraFinal(d, true), 600);
+    const fim = d === 24
+      ? () => setTimeout(jogoVelas, 1400)
+      : () => setTimeout(() => mostraFinal(d, true), 600);
     jogoRaspa(fim, prenda(d));
   }
 
@@ -156,11 +173,49 @@
     cv.addEventListener("pointerup", () => { aRaspar = false; ultimo = null; });
   }
 
+  /* ---------- dia 24: acender as velas ---------- */
+  function jogoVelas() {
+    const caixa = $(".modal-caixa");
+    caixa.classList.add("noite");
+    caixa.style.setProperty("--luz", 0);
+    conteudo.innerHTML = `
+      <h3>Está tudo às escuras…</h3>
+      <p class="instr">Acende as 24 velas 🕯️<br><small>(toca nelas ou passa o dedo por cima)</small></p>
+      <div class="velas">${FAMILIA.map((f, i) => `
+        <button class="vela" type="button" data-i="${i}" aria-label="Vela ${i + 1}">
+          <span class="chama"></span><span class="pavio"></span><span class="cera"></span>
+          <span class="quem">${esc(f[1])}</span>
+        </button>`).join("")}</div>
+      <p class="pares-conta"><b>0</b> / 24</p>`;
+    const grade = $(".velas", conteudo), conta = $(".pares-conta b", conteudo);
+    let acesas = 0, fim = false;
+    const acende = (v) => {
+      if (!v || fim || v.classList.contains("acesa")) return;
+      v.classList.add("acesa");
+      acesas++;
+      conta.textContent = acesas;
+      caixa.style.setProperty("--luz", acesas / 24);
+      if (navigator.vibrate) navigator.vibrate(10);
+      if (acesas === 24) {
+        fim = true;
+        confetis(80);
+        setTimeout(() => mostraFinal(24, true), 1300);
+      }
+    };
+    const debaixo = (e) => { const el = document.elementFromPoint(e.clientX, e.clientY); return el && el.closest(".vela"); };
+    let aPassar = false;
+    grade.addEventListener("pointerdown", (e) => { aPassar = true; grade.setPointerCapture(e.pointerId); acende(debaixo(e)); });
+    grade.addEventListener("pointermove", (e) => { if (aPassar) acende(debaixo(e)); });
+    grade.addEventListener("pointerup", () => { aPassar = false; });
+    grade.addEventListener("pointercancel", () => { aPassar = false; });
+  }
+
   /* ---------- depois de raspar ---------- */
   function mostraFinal(d, celebrar) {
     const p = prenda(d);
     const [quem, emoji] = familiar(d);
     const sem = diaSemana(d);
+    if (d === 24) { $(".modal-caixa").classList.add("noite"); $(".modal-caixa").style.setProperty("--luz", 1); }
     const bilhete = p.tipo === "vale" || p.tipo === "bilhete" ? `
       <div class="bilhete ${p.tipo} aparece">
         <div class="principal">
@@ -171,6 +226,7 @@
         <div class="canhoto">Admitido</div>
       </div>` : "";
     conteudo.innerHTML = `
+      ${d === 24 ? `<div class="velas-mini" aria-hidden="true">${"<i></i>".repeat(7)}</div>` : ""}
       <div class="revelado-emoji">${esc(emoji)}</div>
       <h3>${esc(maiuscula(quem))}</h3>
       <div class="semana" style="--cs:${sem.cor};--ct:${sem.texto || "#fff"}">
@@ -180,6 +236,7 @@
       ${bilhete}
       ${p.imagem ? `<img class="img-prenda aparece" src="${esc(p.imagem)}" alt="">` : ""}
       ${p.link ? `<p class="aparece"><a class="btn ouro" href="${esc(p.link)}" target="_blank" rel="noopener">Abrir link</a></p>` : ""}
+      ${d === 24 && textoConcerto() ? `<p class="contagem-concerto aparece">${textoConcerto()}</p>` : ""}
       <p style="margin-top:18px"><button class="btn sec" type="button" data-fechar>Fechar</button></p>`;
     escreve($(".frase", conteudo), sem.frase + "…", celebrar, () =>
       conteudo.querySelectorAll(".aparece").forEach((el, i) => setTimeout(() => el.classList.add("ver"), i * 250)));

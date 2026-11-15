@@ -111,6 +111,39 @@ main{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:16px 16px
 .aparece{opacity:0;transform:translateY(10px) scale(.96);transition:opacity .45s,transform .45s cubic-bezier(.3,1.5,.5,1)}
 .aparece.ver{opacity:1;transform:none}
 
+/* dia 24: velas */
+.modal-caixa{transition:background-color .6s,color .6s}
+.modal-caixa.noite{color:var(--texto);
+  background:
+    radial-gradient(120% 80% at 50% 55%, rgba(255,184,92,calc(var(--luz,0) * .38)), transparent 70%),
+    #0b1210;
+  box-shadow:0 30px 60px rgba(0,0,0,.6), 0 0 calc(var(--luz,0) * 80px) rgba(255,184,92,calc(var(--luz,0) * .35))}
+.noite .modal-dia{color:var(--ouro)}
+.noite .instr,.noite .pares-conta{color:var(--texto-2)}
+.noite .fechar,.noite .btn.sec{color:var(--texto-2)}
+.velas{display:grid;grid-template-columns:repeat(6,1fr);gap:6px 4px;margin:8px auto 0;max-width:340px;touch-action:none;user-select:none;-webkit-user-select:none}
+.vela{position:relative;height:92px;border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  -webkit-tap-highlight-color:transparent}
+.vela .cera{width:14px;height:34px;border-radius:3px 3px 2px 2px;background:linear-gradient(90deg,#e9dcc4,#fff8ea 45%,#d8c7a8);
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.5)}
+.vela .pavio{width:2px;height:6px;background:#3a2b20;border-radius:1px}
+.vela .chama{position:absolute;bottom:58px;left:50%;width:12px;height:20px;margin-left:-6px;
+  border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;
+  background:radial-gradient(circle at 50% 75%,#fff7d6 0 18%,#ffd36b 40%,#ff8a2b 75%,rgba(255,120,40,0) 100%);
+  transform:scale(0);transform-origin:50% 100%;transition:transform .35s cubic-bezier(.3,1.8,.5,1)}
+.vela .quem{font-size:1.05rem;line-height:1;margin-top:5px;filter:grayscale(1) brightness(.45);transition:filter .4s}
+.vela.acesa .chama{transform:scale(1);animation:tremeluz 1.4s ease-in-out infinite alternate;
+  box-shadow:0 0 14px 6px rgba(255,170,70,.45),0 0 34px 14px rgba(255,170,70,.18)}
+.vela.acesa .quem{filter:none}
+@keyframes tremeluz{0%{transform:scale(1) rotate(-2deg)}50%{transform:scale(.94,1.06) rotate(2deg)}100%{transform:scale(1.04,.96) rotate(-1deg)}}
+.velas-mini{display:flex;justify-content:center;gap:14px;margin:2px 0 8px}
+.velas-mini i{width:9px;height:15px;border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;
+  background:radial-gradient(circle at 50% 75%,#fff7d6 0 18%,#ffd36b 40%,#ff8a2b 80%);
+  box-shadow:0 0 12px 4px rgba(255,170,70,.4);animation:tremeluz 1.2s ease-in-out infinite alternate}
+.velas-mini i:nth-child(even){animation-delay:-.6s}
+.pares-conta{margin:12px 0 0;font-weight:700}
+.contagem-concerto{margin:6px 0 0;font-weight:800;color:var(--ouro);font-size:1.05rem}
+
 /* bilhete / vale */
 .bilhete{display:flex;text-align:left;margin:8px 0 6px;border-radius:12px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.18);
   background:linear-gradient(135deg,var(--noite-2),var(--noite));color:var(--texto)}
