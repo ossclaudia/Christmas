@@ -54,7 +54,7 @@ const FAMILIA = [
   ["a tua nora", "👰‍♀️"],                // 21
   ["o teu sogro", "🧓"],                   // 22
   ["o teu genro", "🤵"],                   // 23
-  ["a tua sogra", "👩‍🦳"],                 // 24
+  ["o teu bisavô", "🎅"],                  // 24 vestido de Pai Natal
 ];
 
 /* Prendas de cada dia.
