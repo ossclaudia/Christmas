@@ -16,13 +16,13 @@ const CONFIG = {
 /* A frase de cada dia da semana (0 = domingo, 1 = segunda, ... 6 = sábado).
    cor = cor da porta e do cartão; texto (opcional) = cor das letras se a cor for clara */
 const SEMANA = {
-  1: { frase: "It's fucking Shit from shein that made me think of you Monday", cor: "#d1477a" },
-  2: { frase: "It's fucking Style Tuesday",                                    cor: "#e8bf2e", texto: "#2a1d17" },
-  3: { frase: "It's fucking I didn't have money for more Wednesday",           cor: "#2f8f6b" },
+  1: { frase: "It's fucking Shit from shein that made me think of you Monday", cor: "#b8686d" },
+  2: { frase: "It's fucking Style Tuesday",                                    cor: "#b98a2c" },
+  3: { frase: "It's fucking I didn't have money for more Wednesday",           cor: "#1f6b50" },
   4: { frase: "It's fucking date Thursday",                                    cor: "#c3392c" },
-  5: { frase: "It's fucking Personalized Friday",                              cor: "#2c6fa8" },
-  6: { frase: "It's fucking U kinda need it Saturday",                         cor: "#c27a1e" },
-  0: { frase: "It's fucking Fat Sunday",                                       cor: "#a0522d" },
+  5: { frase: "It's fucking Personalized Friday",                              cor: "#2c5f7c" },
+  6: { frase: "It's fucking U kinda need it Saturday",                         cor: "#a6452a" },
+  0: { frase: "It's fucking Fat Sunday",                                       cor: "#8f2f3a" },
 };
 
 /* Familiar de cada dia (dias 1 a 24, por ordem).
